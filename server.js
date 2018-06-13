@@ -8,7 +8,12 @@ const mongoose = require('mongoose');
 const databaseLink = require('./config/database');
 const path = require('path');
 const cors = require('cors');
+
+//routes start
 const authentication = require('./routes/authentication')(router);
+const blog = require('./routes/blog')(router);
+//routes end
+
 //dababase connection
 mongoose.Promise = global.Promise;
 
@@ -28,6 +33,7 @@ app.use(morgan('dev'));
 
 app.use(express.static(__dirname + '/Client/dist'))
 app.use('/authentication',authentication);
+app.use('/blogs',blog)
 // test
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname + '/Client/dist/index.html'))

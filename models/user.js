@@ -89,7 +89,8 @@ var userSchema = new Schema({
     username:{type:String,trim:true,unique:true,required:true,lowercase:true ,validate:userNameValidators},
     password:{type:String,required:true,validate:passwordValidators},
     CreatedAt:{type:Date,default:Date.now()},
-    UpdatedAt:{type:Date}
+    UpdatedAt:{type:Date},
+    role:{type:String,enum:['User','SuperUser'],default:'User'}
 })
 
 userSchema.pre('save',function(next){

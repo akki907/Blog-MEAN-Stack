@@ -1,3 +1,11 @@
-<p>
-  home works!
-</p>
+<div  class="container marginJum">
+  <div class="jumbotron text-center">
+    <h1>Blog</h1>
+    <div>
+      <a *ngIf="!auth.loggedIn()" routerLink="/register" class="btn btn-primary">Register</a>
+      <a *ngIf="!auth.loggedIn()" routerLink="/login" class="btn btn-default">Login</a>
+      <a *ngIf="auth.loggedIn()" routerLink="/blog" class="btn btn-default">View Blogs</a>
+  
+    </div>
+  </div>
+</div>

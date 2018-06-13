@@ -1,0 +1,33 @@
+<h1 class="page-header">Edit Blog</h1>
+
+
+<div class="row show-hide-message" *ngIf="message ">
+  <div [ngClass]="messageClass">
+    {{message}}
+  </div>
+</div>
+
+<form (submit)="onSubmitBlog()" *ngIf="!loading">
+
+  <div class="form-group">
+    <div >
+      <div class="row">
+          <label for="input_text">Blog Title</label>
+          <div class="input-field col s12">
+            <input [disabled]="processing" type="text" name="title"  data-length="10" [(ngModel)]="blog.title" >
+          </div>
+        </div>
+     </div>
+  </div>
+
+  <div class="row">
+      <label for="textarea1">Body</label>
+    <div class="input-field col s12">
+      <textarea [disabled]="processing" name="body" id="textarea1" class="materialize-textarea" data-length="500" [(ngModel)]="blog.body" ></textarea>
+    </div>
+  </div>
+  <button [disabled]="processing" type="button" (click)="goBack()" class="btn">Go Back</button>
+
+  <button [disabled]="processing" type="submit" name="save" class="btn">Submit</button>
+
+</form>

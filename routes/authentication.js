@@ -2,7 +2,7 @@ const User = require('../models/user');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database')
-
+const auth = require('./Helper/authenticate')
 module.exports =(router) => {
 
     router.post('/register',(req,res)=>{
@@ -92,7 +92,7 @@ module.exports =(router) => {
                 if(!validPassword){
                     res.json({success:false,message:'password Invalid'})
                 }else{
-                   var token =  jwt.sign({ _id : user._id,email:user.email},config.secret,{ expiresIn : '24h'});
+                   var token =  jwt.sign({ _id : user._id,email:user.email,username:user.username},config.secret,{ expiresIn : '24h'});
                     res.json({success:true,message:'Login SuccessFull',token:token,user:{username: user.username,email:user.email}})
                 }
             })
@@ -112,20 +112,20 @@ module.exports =(router) => {
     //     }
     // })
 
-    const requireAuth = (req,res,next)=>{
-        const token = req.headers['authorization'];
-        if(!token){
-            res.json({success:false,message:'No token provided'})
-        }else{
-            jwt.verify(token,config.secret,(err,user)=>{
-                if (err) return res.json({success:false,message:"Token Invalid"+err})
-                req.user = user;
-                next()
-            })
-        }
-    }
+    // const requireAuth = (req,res,next)=>{
+    //     const token = req.headers['authorization'];
+    //     if(!token){
+    //         res.json({success:false,message:'No token provided'})
+    //     }else{
+    //         jwt.verify(token,config.secret,(err,user)=>{
+    //             if (err) return res.json({success:false,message:"Token Invalid"+err})
+    //             req.user = user;
+    //             next()
+    //         })
+    //     }
+    // }
 
-    router.get('/profile',requireAuth,(req,res)=>{
+    router.get('/profile',auth.requireAuth,(req,res)=>{
         User.findOne({_id:req.user._id})
         .select('username email')
         .exec(function(err,user){

@@ -1,3 +1,91 @@
-<p>
-  blog works!
-</p>
+<h1 class="page-header">Blog Feed</h1>
+
+<div class="row show-hide-message" *ngIf="message && newPost">
+  <div [ngClass]="messageClass">
+    {{message}}
+  </div>
+</div>
+
+<button type="button" name="button" class="btn btn-warning" (click)="newBlogForm()" *ngIf="!newPost" >New post</button>
+<button [disabled]="loadingBlogs" *ngIf="!newPost" (click)="reloadBlog()" type="button" name="button" class="btn btn-default" >Reload</button>
+<br>
+<br>
+
+<form [formGroup]="form" name="blogForm"  (submit)="onSubmitBlog()" *ngIf="newPost">
+  <div class="form-group">
+    <div [ngClass]="{'has-success': form.controls.title.valid,'has-error':form.controls.title.dirty && form.controls.title.errors}">
+      <div class="row">
+          <div class="input-field col s6">
+            <input type="text" name="title"  data-length="10"  formControlName="title">
+            <label for="input_text">Blog Title</label>
+          </div>
+        </div>
+      <ul class="help-block">
+        <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.required">This Field is Required. </li>
+        <li *ngIf="(form.controls.title.dirty && form.controls.title.errors?.minlength )|| (form.controls.title.dirty && form.controls.title.errors?.maxlength)">Max Length:50,Min Length:5 </li>
+        <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.alphanumericValidation">Must be a letter or a Number. </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="Form-group"> 
+        <div [ngClass]="{'has-success': form.controls.body.valid,'has-error':form.controls.body.dirty && form.controls.body.errors}">
+          <div class="row">
+              <div class="input-field col s12">
+                <textarea id="textarea1" class="materialize-textarea" data-length="500" formControlName="body"></textarea>
+                <label for="textarea1">Description</label>
+                <!-- <ck-editor id="textarea1" name="editor1" formControlName="body" skin="moono-lisa" language="en" [fullPage]="true"></ck-editor> -->
+
+              </div>
+            </div>
+          <ul class="help-block">
+            <li *ngIf="form.controls.body.dirty && form.controls.body.errors?.required">This Field is Required. </li>
+            <li *ngIf="(form.controls.body.dirty && form.controls.body.errors?.minlength )|| (form.controls.body.dirty && form.controls.body.errors?.maxlength)">Max Length:500,Min Length:5</li>
+          </ul>
+        </div>
+      </div>
+
+      <button [disabled]="processing" type="button" name="button" (click)="goBack()" class="btn btn-primary">Go Back</button>
+      <button [disabled]="processing || !form.valid" type="submit" name="button"  class="btn btn-primary">Submit</button>
+
+</form>
+
+
+<div *ngIf="!newPost">
+  <div class="panel panel-primary" *ngFor="let blog of blogPost">
+     <div class="panel-heading">
+       <h3 class="panel-title">
+        {{blog.title}}
+       </h3>
+     </div>
+     <div class="panel-body">
+      {{blog.body}}
+     </div>
+     <div class="panel-footer">
+      <p><strong>Posted By : </strong>{{blog.createdBy.username}}</p>
+      <p><strong>Date:</strong>{{blog.CreatedAt | date:'MMM dd,yyyy'}}</p>
+    
+      <div *ngIf="user == blog.createdBy.username">
+        <p><strong>like : </strong>{{blog.likes}}</p>
+        <p><strong>Dislike : </strong>{{blog.dislikes}}</p>
+      </div>
+      <div *ngIf="user !== blog.createdBy.username">
+        <button class="btn" [disabled]="blog.dislikeBy.indexOf(user)" (click)="likeBlog(blog._id)"><span>{{blog.likedBy.length}}</span> like</button>
+        
+        <button class="btn" [disabled]="blog.likedBy.indexOf(user)" (click)="dislikeBlog(blog._id)"><span>{{blog.dislikeBy.length}}</span> dislike</button>
+      </div>
+      <br>
+      <a [routerLink]="['/editBlog/',blog._id]">
+        <button  *ngIf="user == blog.createdBy.username" class="btn btn-info">Edit</button>
+        </a>
+      <a routerLink="/editBlog" *ngIf="user === blog.createdBy.username" class="btn btn-Danger">Delete</a>
+  
+
+        <!-- <a class="btn dropdown-button" href="#!" data-activates="dropdown2">Dropdown<i class="material-icons right">arrow_drop_down</i></a> -->
+
+     </div>
+  </div>
+</div>
+
+
