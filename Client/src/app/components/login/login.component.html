@@ -1,0 +1,52 @@
+<h3 class="page-header">Login</h3>
+
+<div class="row show-hide-message">
+  <div [ngClass]="messageClass">
+    {{message}}
+  </div>
+</div>
+
+<form [formGroup]="form" (submit)="onLoginSubmit()">
+  
+  <div class="form-group">
+    <label for="username">User Name:</label>
+    <div  [ngClass]="{'has-error': (form.controls.username.errors && form.controls.username.dirty) || (!usernameValid && form.controls.username.dirty),
+    'has-success': !form.controls.username.errors && usernameValid}">
+    <input type="text" class="form-control" id="username" formControlName="username" >
+    <ul class="help-block">
+      <li *ngIf="form.controls.username.errors?.required && form.controls.username.dirty">
+        This Field is required
+      </li>
+      <li *ngIf="form.controls.username.errors?.minlength || form.controls.username.errors?.maxlength">
+        Minimum characters : 3,Maximum Characters : 15
+      </li>
+      <li *ngIf="form.controls.username.errors?.validateUsername && form.controls.username.dirty">
+        Username must not have any special character
+      </li>
+      <li *ngIf="usernameMessage">
+        {{usernameMessage}}
+      </li>
+    </ul>
+  </div>
+  </div>
+  <div class="form-group" >
+    <label for="pwd">Password:</label>
+    <div [ngClass]="{'has-error': (form.controls.password.errors && form.controls.password.dirty),
+    'has-success': !form.controls.password.errors}">
+    <input type="password" class="form-control" id="pwd" formControlName="password">
+    <ul class="help-block">
+      <li *ngIf="form.controls.password.errors?.required && form.controls.password.dirty">
+        This Field is required
+      </li>
+      <li *ngIf="form.controls.password.errors?.minlength || form.controls.password.errors?.maxlength">
+        Minimum characters : 5,Maximum Characters : 35
+      </li>
+      <li *ngIf="form.controls.password.errors?.validPassword && form.controls.password.dirty">
+        Must have at least one uppercase ,lowercase,special character, and number
+      </li>
+    </ul>
+    </div>
+  </div>
+ 
+  <input [disabled]="!form.valid || processing " type="submit" class="btn btn-primary" value="Submit" />
+</form>
